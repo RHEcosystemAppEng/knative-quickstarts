@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: knative-demo-buildconfig
+objects:
+- apiVersion: serving.knative.dev/v1
+  kind: Service
+  metadata:
+    name: event-display
+  spec:
+    template:
+      metadata:
+        labels:
+          module: event-display
+        annotations:
+          autoscaling.knative.dev/min-scale: "1"
+      spec:
+        containers:
+          - image: gcr.io/knative-releases/knative.dev/eventing/cmd/event_display
+            name: user-container
+- apiVersion: sources.knative.dev/v1
+  kind: PingSource
+  metadata:
+    name: poller
+  spec:
+    schedule: "*/1 * * * *"
+    contentType: "application/json"
+    data: '{"message": "Triggered from poller every 1 minute"}'
+    sink:
+      ref:
+        apiVersion: v1
+        kind: Service
+        name: producer-python
+- apiVersion: serving.knative.dev/v1
+  kind: Service
+  metadata:
+    name: producer-python
+  spec:
+    template:
+      metadata:
+        labels:
+          module: producer
+        annotations:
+          autoscaling.knative.dev/min-scale: "1"
+          alpha.image.policy.openshift.io/resolve-names: '*'
+      spec:
+        containers:
+          - image: image-registry.openshift-image-registry.svc:5000/dmartino-dev/producer-python:latest
+            name: producer-python
+            imagePullPolicy: Always
+            env:
+            - name: APP_FILE
+              value: producer.py
+parameters:
+- description: App namespace
+  from: '[A-Z0-9]{8}'
+  generate: expression
+  name: APP_NAMESPACE
+labels:
+  app: demo
+  layer: app

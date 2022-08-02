@@ -18,14 +18,15 @@ def produce_new_event():
         "source": "producer-python"
     }
     now = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-    data = {"message": f"A new message at {now}"}
+    revisionName = os.environ['K_REVISION']
+    data = {"message": f"A new message from {revisionName} at {now}"}
     event = CloudEvent(attributes, data)
 
     # Creates the HTTP request representation of the CloudEvent in structured content mode
     headers, body = to_structured(event)
 
     sinkUrl = os.environ['K_SINK']
-    app.logger.info(f'Sending event of type {event._attributes["type"]} with data {event.data} to {sinkUrl}')
+    app.logger.info(f'It''s {revisionName} Sending event of type {event._attributes["type"]} with data {event.data} to {sinkUrl}')
 
     # POST
     response = requests.post(sinkUrl, data=body, headers=headers)

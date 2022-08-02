@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: knative-demo-buildconfig
+objects:
+- apiVersion: eventing.knative.dev/v1
+  kind: Broker
+  metadata:
+    name: default
+    namespace: ${APP_NAMESPACE}
+- apiVersion: eventing.knative.dev/v1
+  kind: Trigger
+  metadata:
+    name: event-display-trigger
+    namespace: ${APP_NAMESPACE}
+  spec:
+    broker: default
+    subscriber:
+      ref:
+        apiVersion: serving.knative.dev/v1
+        kind: Service
+        name: event-display
+- apiVersion: sources.knative.dev/v1
+  kind: SinkBinding
+  metadata:
+    name: producer-binding
+    namespace: ${APP_NAMESPACE}
+  spec:
+    subject:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: producer-python
+    sink:
+      ref:
+        apiVersion: eventing.knative.dev/v1
+        kind: Broker
+        name: default
+        namespace: ''
+parameters:
+- description: App namespace
+  from: '[A-Z0-9]{8}'
+  generate: expression
+  name: APP_NAMESPACE
+labels:
+  app: demo
+  layer: infra
