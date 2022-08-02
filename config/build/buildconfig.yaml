@@ -26,7 +26,7 @@ objects:
     source:
       git:
         uri: https://github.com/dmartinol/knative-quickstarts.git
-      contextDir: producer
+      contextDir: src/producer
       type: Git
     strategy:
       sourceStrategy:
