@@ -26,7 +26,7 @@ def produce_new_event():
     headers, body = to_structured(event)
 
     sinkUrl = os.environ['K_SINK']
-    app.logger.info(f'It''s {revisionName} Sending event of type {event._attributes["type"]} with data {event.data} to {sinkUrl}')
+    app.logger.info(f'It\'s {revisionName} Sending event of type {event._attributes["type"]} with data {event.data} to {sinkUrl}')
 
     # POST
     response = requests.post(sinkUrl, data=body, headers=headers)
