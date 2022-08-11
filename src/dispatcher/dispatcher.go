@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"os"
 
 	cloudevents "github.com/cloudevents/sdk-go/v2"
 	"github.com/dmartinol/knative-quickstarts/src/dispatcher/pkg/eventschema"
@@ -30,8 +31,21 @@ func receive(ctx context.Context, event cloudevents.Event) (*cloudevents.Event, 
 	if err := newEvent.SetData(cloudevents.ApplicationJSON, eventschema.HiFromKnative{Msg: "Hi from helloworld-go app!"}); err != nil {
 		return nil, cloudevents.NewHTTPResult(500, "failed to set response data: %s", err)
 	}
-	log.Printf("Responding with event\n%s\n", newEvent)
-	return &newEvent, nil
+
+	destination, isSet := os.LookupEnv("K_SINK")
+	if !isSet {
+		destination = "http://localhost:8080"
+	}
+	c, err := cloudevents.NewClientHTTP()
+	if err != nil {
+		log.Fatalf("Failed to create client, %v", err)
+	}
+	dispatchCtx := cloudevents.ContextWithTarget(context.Background(), destination)
+	if result := c.Send(dispatchCtx, newEvent); cloudevents.IsUndelivered(result) {
+		log.Printf("Responding with event\n%s\n", newEvent)
+		return &newEvent, nil
+	}
+	return nil, nil
 }
 
 func main() {
