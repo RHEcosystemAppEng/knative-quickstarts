@@ -1,4 +1,4 @@
-apiVersion: v1
+apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
   name: knative-demo-buildconfig
@@ -7,6 +7,7 @@ objects:
   kind: Service
   metadata:
     name: event-display
+    namespace: ${APP_NAMESPACE}
   spec:
     template:
       metadata:
@@ -22,6 +23,7 @@ objects:
   kind: PingSource
   metadata:
     name: poller
+    namespace: ${APP_NAMESPACE}
   spec:
     schedule: "*/1 * * * *"
     contentType: "application/json"
@@ -35,18 +37,40 @@ objects:
   kind: Service
   metadata:
     name: producer-python
+    namespace: ${APP_NAMESPACE}
   spec:
     template:
       metadata:
         labels:
           module: producer
+          app: knative-quickstarts-demo
         annotations:
           autoscaling.knative.dev/min-scale: "1"
-          alpha.image.policy.openshift.io/resolve-names: '*'
       spec:
         containers:
-          - image: image-registry.openshift-image-registry.svc:5000/dmartino-dev/producer-python:latest
-            name: producer-python
+          - image: image-registry.openshift-image-registry.svc:5000/${APP_NAMESPACE}/producer-python:latest
+            name: knative-quickstarts-demo-app
+            imagePullPolicy: Always
+            env:
+            - name: APP_FILE
+              value: producer.py
+- apiVersion: serving.knative.dev/v1
+  kind: Service
+  metadata:
+    name: dispatcher-go
+    namespace: ${APP_NAMESPACE}
+  spec:
+    template:
+      metadata:
+        labels:
+          module: dispatcher
+          app: knative-quickstarts-demo
+        annotations:
+          autoscaling.knative.dev/min-scale: "1"
+      spec:
+        containers:
+          - image: image-registry.openshift-image-registry.svc:5000/${APP_NAMESPACE}/dispatcher-go:latest
+            name: knative-quickstarts-demo-app
             imagePullPolicy: Always
             env:
             - name: APP_FILE

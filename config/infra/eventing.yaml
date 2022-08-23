@@ -1,4 +1,4 @@
-apiVersion: v1
+apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
   name: knative-demo-buildconfig
@@ -20,6 +20,18 @@ objects:
         apiVersion: serving.knative.dev/v1
         kind: Service
         name: event-display
+- apiVersion: eventing.knative.dev/v1
+  kind: Trigger
+  metadata:
+    name: dispatcher-trigger
+    namespace: ${APP_NAMESPACE}
+  spec:
+    broker: default
+    subscriber:
+      ref:
+        apiVersion: serving.knative.dev/v1
+        kind: Service
+        name: dispatcher-go
 - apiVersion: sources.knative.dev/v1
   kind: SinkBinding
   metadata:
@@ -35,7 +47,58 @@ objects:
         apiVersion: eventing.knative.dev/v1
         kind: Broker
         name: default
-        namespace: ''
+        namespace: ${APP_NAMESPACE}
+- apiVersion: sources.knative.dev/v1
+  kind: SinkBinding
+  metadata:
+    name: dispatcher-binding
+    namespace: ${APP_NAMESPACE}
+  spec:
+    subject:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: dispatcher-go
+    sink:
+      ref:
+        apiVersion: messaging.knative.dev/v1
+        kind: Channel
+        name: event-channel
+        namespace: ${APP_NAMESPACE}
+- apiVersion: messaging.knative.dev/v1
+  kind: Channel
+  metadata:
+    name: event-channel
+    namespace: ${APP_NAMESPACE}
+- apiVersion: messaging.knative.dev/v1
+  kind: Subscription
+  metadata:
+    name: loader-subscription
+    namespace: ${APP_NAMESPACE}
+  spec:
+    channel:
+      apiVersion: messaging.knative.dev/v1
+      kind: Channel
+      name: event-channel
+    subscriber:
+      ref:
+        apiVersion: serving.knative.dev/v1
+        kind: Service
+        name: loader
+- apiVersion: messaging.knative.dev/v1
+  kind: Subscription
+  metadata:
+    name: event-display-subscription
+    namespace: ${APP_NAMESPACE}
+  spec:
+    channel:
+      apiVersion: messaging.knative.dev/v1
+      kind: Channel
+      name: event-channel
+    subscriber:
+      ref:
+        apiVersion: serving.knative.dev/v1
+        kind: Service
+        name: event-display
 parameters:
 - description: App namespace
   from: '[A-Z0-9]{8}'

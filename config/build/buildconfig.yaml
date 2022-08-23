@@ -1,4 +1,4 @@
-apiVersion: v1
+apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
   name: knative-demo-buildconfig
@@ -8,9 +8,17 @@ objects:
   metadata:
     name: producer-python
     namespace: ${IMAGE_NAMESPACE}
-  spec:
-    lookupPolicy:
-      local: true
+  # spec:
+  #   lookupPolicy:
+  #     local: true
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: dispatcher-go
+    namespace: ${IMAGE_NAMESPACE}
+  # spec:
+  #   lookupPolicy:
+  #     local: true
 - apiVersion: build.openshift.io/v1
   kind: BuildConfig
   metadata:
@@ -35,6 +43,28 @@ objects:
           name: python:3.9-ubi8
           namespace: openshift
       type: Source
+    triggers:
+    - type: ConfigChange
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    name: dispatcher-go
+    namespace: ${IMAGE_NAMESPACE}
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: dispatcher-go:latest
+        namespace: ${IMAGE_NAMESPACE}
+    postCommit: {}
+    source:
+      git:
+        uri: https://github.com/dmartinol/knative-quickstarts.git
+      contextDir: src/dispatcher
+      type: Git
+    strategy:
+      type: Docker
+      dockerStrategy: {}
     triggers:
     - type: ConfigChange
 parameters:
