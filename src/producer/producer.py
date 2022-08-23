@@ -11,7 +11,7 @@ app = Flask(__name__)
 def produce_new_event():
     serviceName = os.environ['K_SERVICE']
     revisionName = os.environ['K_REVISION']
-    app.logger.info(f'[{revisionName}] - Received CloudEvent with type {request.type} and data: {request.data}')
+    app.logger.info(f'[{revisionName}] - Received CloudEvent with type {request.data} and data: {request.data}')
 
     # Create a CloudEvent
     # - The CloudEvent "id" is generated if omitted. "specversion" defaults to "1.0".
