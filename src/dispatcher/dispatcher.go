@@ -38,6 +38,7 @@ func receive(ctx context.Context, event cloudevents.Event) (*cloudevents.Event, 
 
 	dispatchedEvent := eventschema.DispatchedEvent{Msg: fmt.Sprintf("Dispatched from %s at %s", revisionName, now)}
 	if err := newEvent.SetData(cloudevents.ApplicationJSON, dispatchedEvent); err != nil {
+		log.Printf("[%s] - Error while creating DispatchedEvent: %s\n", revisionName, err.Error())
 		return nil, cloudevents.NewHTTPResult(500, "failed to set response data: %s", err)
 	}
 
@@ -45,13 +46,15 @@ func receive(ctx context.Context, event cloudevents.Event) (*cloudevents.Event, 
 	if !isSet {
 		destination = "http://localhost:8080"
 	}
+	log.Printf("[%s] - Sending to %s\n", revisionName, destination)
 	c, err := cloudevents.NewClientHTTP()
 	if err != nil {
 		log.Fatalf("Failed to create client, %v", err)
 	}
 	dispatchCtx := cloudevents.ContextWithTarget(context.Background(), destination)
+	log.Printf("[%s] - Sending CloudEvent of type %s with data %s to %s\n", revisionName, newEvent.Type(), dispatchedEvent, destination)
 	if result := c.Send(dispatchCtx, newEvent); cloudevents.IsUndelivered(result) {
-		log.Printf("[%s] - Sending CloudEvent of type %s with data %s to %s\n", revisionName, newEvent.Type(), dispatchedEvent, destination)
+		log.Printf("[%s] - result is %s\n", revisionName, result)
 		return &newEvent, nil
 	}
 	return nil, nil
