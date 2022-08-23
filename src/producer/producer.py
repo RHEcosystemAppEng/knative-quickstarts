@@ -9,16 +9,17 @@ app = Flask(__name__)
 
 @app.route('/', methods=['POST'])
 def produce_new_event():
-    app.logger.info(f'Received POST request with payload: {request.data}')
+    serviceName = os.environ['K_SERVICE']
+    revisionName = os.environ['K_REVISION']
+    app.logger.info(f'[{revisionName}] - Received POST request with type {request.type} and data: {request.data}')
 
     # Create a CloudEvent
     # - The CloudEvent "id" is generated if omitted. "specversion" defaults to "1.0".
     attributes = {
-        "type": "com.redhat.knative-quickstarts.new_event",
-        "source": "producer-python"
+        "type": "com.redhat.knative.demo.Produced",
+        "source": serviceName
     }
     now = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-    revisionName = os.environ['K_REVISION']
     data = {"message": f"A new message from {revisionName} at {now}"}
     event = CloudEvent(attributes, data)
 
@@ -26,7 +27,7 @@ def produce_new_event():
     headers, body = to_structured(event)
 
     sinkUrl = os.environ['K_SINK']
-    app.logger.info(f'It\'s {revisionName} Sending event of type {event._attributes["type"]} with data {event.data} to {sinkUrl}')
+    app.logger.info(f'[{revisionName}] - Sending event of type {event._attributes["type"]} with data {event.data} to {sinkUrl}')
 
     # POST
     response = requests.post(sinkUrl, data=body, headers=headers)
