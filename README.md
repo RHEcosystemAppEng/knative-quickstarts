@@ -67,24 +67,31 @@ graph TD
 ## Installing the application
 
 ```bash
-oc process -p=APP_NAMESPACE=knative-quickstarts -f config/infra | oc apply -f -
-oc process -p=IMAGE_NAMESPACE=knative-quickstarts -f config/build | oc apply -f -
-oc process -p=APP_NAMESPACE=knative-quickstarts -f config/app | oc apply -f -
+export APP_NAMESPACE=dmartino-dev
+export IMAGE_NAMESPACE=dmartino-dev
+oc project ${APP_NAMESPACE}
+oc process -p=APP_NAMESPACE=${APP_NAMESPACE} -f config/infra | oc apply -f -
+oc process -p=IMAGE_NAMESPACE=${IMAGE_NAMESPACE} -f config/build | oc apply -f -
+oc process -p=APP_NAMESPACE=${APP_NAMESPACE} -f config/app | oc apply -f -
 ```
 
 ```bash
 oc logs -f -l app=knative-quickstarts-demo -c knative-quickstarts-demo-app
+oc logs -f -l module=event-display -c user-container
 ```
 
 ```bash
-oc process -p=APP_NAMESPACE=knative-quickstarts -f config/infra | oc delete -f -
-oc process -p=IMAGE_NAMESPACE=knative-quickstarts -f config/build | oc delete -f -
-oc process -p=APP_NAMESPACE=knative-quickstarts -f config/app | oc delete -f -
+oc process -p=APP_NAMESPACE=${APP_NAMESPACE} -f config/infra | oc delete -f -
+oc process -p=IMAGE_NAMESPACE=${IMAGE_NAMESPACE} -f config/build | oc delete -f -
+oc process -p=APP_NAMESPACE=${APP_NAMESPACE} -f config/app | oc delete -f -
 ```
 
 ## Uninstalling the application
 ```bash
-oc process -p=APP_NAMESPACE=knative-quickstarts -f config/app | oc delete -f -
+oc process -p=APP_NAMESPACE=${APP_NAMESPACE} -f config/infra | oc delete -f -
+oc process -p=IMAGE_NAMESPACE=${IMAGE_NAMESPACE} -f config/build | oc delete -f -
+oc process -p=APP_NAMESPACE=${APP_NAMESPACE} -f config/app | oc delete -f -
+oc delete namespace knative-quickstarts
 ```
 
 kn service update producer-python --scale-min=2
