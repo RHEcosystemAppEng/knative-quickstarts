@@ -26,7 +26,7 @@ func receive(ctx context.Context, event cloudevents.Event) (*cloudevents.Event, 
 		log.Printf("[%s] - Error while extracting cloudevent Data: %s\n", revisionName, err.Error())
 		return nil, cloudevents.NewHTTPResult(400, "failed to convert data: %s", err)
 	}
-	log.Printf("[%s] - Event received with type %s and data: %s\n", revisionName, event.Type(), data)
+	log.Printf("[%s] - Event received with type %s and data: %s\n", revisionName, event.Type(), *data)
 
 	newEvent := cloudevents.NewEvent()
 	// Setting the ID here is not necessary. When using NewDefaultClient the ID is set
