@@ -11,7 +11,7 @@ app = Flask(__name__)
 def produce_new_event():
     serviceName = os.environ['K_SERVICE']
     revisionName = os.environ['K_REVISION']
-    app.logger.info(f'[{revisionName}] - Received POST request with type {request.type} and data: {request.data}')
+    app.logger.info(f'[{revisionName}] - Received CloudEvent with type {request.type} and data: {request.data}')
 
     # Create a CloudEvent
     # - The CloudEvent "id" is generated if omitted. "specversion" defaults to "1.0".
@@ -27,7 +27,7 @@ def produce_new_event():
     headers, body = to_structured(event)
 
     sinkUrl = os.environ['K_SINK']
-    app.logger.info(f'[{revisionName}] - Sending event of type {event._attributes["type"]} with data {event.data} to {sinkUrl}')
+    app.logger.info(f'[{revisionName}] - Sending CloudEvent of type {event._attributes["type"]} with data {event.data} to {sinkUrl}')
 
     # POST
     response = requests.post(sinkUrl, data=body, headers=headers)
