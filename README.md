@@ -2,6 +2,7 @@
 Generate, display and store recurring events (polyglot)
 
 ## Sample architecture
+Deployment architecture of the demo application:
 ```mermaid
 graph TD
    poller(<b>sources.eventing.knative.dev.CronJobSource</b><br/>poller)
@@ -29,7 +30,7 @@ graph TD
 
    event-display(<b>serving.knative.dev.Service</b><br/>&ltImage&gt<br/>&ltmin-scale=1&gt<br/>event-display)
    event-display-trigger(<b>Trigger</b><br/>event-display-trigger)
-   event-display-subscription(<b>messaging.knative.dev.Subscription</b><br/>loader-subscription)
+   event-display-subscription(<b>messaging.knative.dev.Subscription</b><br/>event-display-subscription)
    event-display-trigger --subscriber--> event-display
    event-display-trigger --broker--> broker
    event-display-subscription --channel--> event-channel
@@ -39,6 +40,30 @@ graph TD
    loader --env.POSTGRES_HOST-->event-store
 ```
 
+Configured event flow:
+```mermaid
+graph TD
+   poller(<b>sources.eventing.knative.dev.CronJobSource</b><br/>poller)
+   producer(<b>serving.knative.dev.Service</b><br/>&ltPython&gt producer)
+   broker[<b>eventing.knative.dev.Broker</b><br/>default]
+   poller --type: dev.knative.sources.ping--> producer
+   producer --type: com.redhat.knative.demo.Produced--> broker
+
+   dispatcher(<b>serving.knative.dev.Service</b><br/>&ltGo&gt dispatcher)
+   event-channel(<b>Channel</b><br/>event-channel)
+   broker --type: com.redhat.knative.demo.Produced--> dispatcher
+   dispatcher --type: com.redhat.knative.demo.Dispatched--> event-channel
+
+   loader(<b>serving.knative.dev.Service</b><br/>&ltQuarkus&gt loader)
+   event-channel --type: com.redhat.knative.demo.Dispatched--> loader
+
+   event-display(<b>serving.knative.dev.Service</b><br/>&ltImage&gt<br/>&ltmin-scale=1&gt<br/>event-display)
+   broker --type: com.redhat.knative.demo.Produced--> event-display
+   event-channel --type: com.redhat.knative.demo.Dispatched--> event-display
+
+   event-store[(<b>v1.Service</b><br/>&ltPostgreSQL&gt<br/>event-store)]
+   loader --type: com.redhat.knative.demo.Loaded-->event-store
+```
 ## Installing the application
 
 ```bash
