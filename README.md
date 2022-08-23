@@ -29,9 +29,9 @@ graph TD
 
    event-display(<b>serving.knative.dev.Service</b><br/>&ltImage&gt<br/>&ltmin-scale=1&gt<br/>event-display)
    event-display-trigger(<b>Trigger</b><br/>event-display-trigger)
+   event-display-subscription(<b>messaging.knative.dev.Subscription</b><br/>loader-subscription)
    event-display-trigger --subscriber--> event-display
    event-display-trigger --broker--> broker
-   event-display-subscription(<b>messaging.knative.dev.Subscription</b><br/>loader-subscription)
    event-display-subscription --channel--> event-channel
    event-display-subscription --subscriber--> event-display
 
