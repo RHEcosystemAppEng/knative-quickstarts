@@ -1,3 +1,4 @@
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 
 import io.quarkus.funqy.Context;
@@ -11,7 +12,8 @@ public class LoaderFunction {
         String msg;
     }
 
-    private final static String revisionName = System.getProperty("K_REVISION", "revision-NA");
+    @ConfigProperty(name = "k-revision") 
+    private String revisionName;
 
     @Funq("com.redhat.knative.demo.Dispatched")
     public String load(DispatchedEvent message, @Context CloudEvent event) {
