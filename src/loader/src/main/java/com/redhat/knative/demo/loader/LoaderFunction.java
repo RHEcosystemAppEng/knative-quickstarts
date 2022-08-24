@@ -17,7 +17,7 @@ public class LoaderFunction {
 
     @Funq("com.redhat.knative.demo.Dispatched")
     public String load(DispatchedEvent message, @Context CloudEvent event) {
-        log.infof("[%s] - Event received with type %s and data: %s\n", revisionName, event.type(), message);
+        log.infof("[%s] - Event received with type %s and data: %s, %s\n", revisionName, event.type(), message.msg, event.data());
         return "Hello " + message.msg;
     }
 }

@@ -19,6 +19,9 @@ objects:
         containers:
           - image: gcr.io/knative-releases/knative.dev/eventing/cmd/event_display
             name: user-container
+            resources:
+              limits:
+                memory: 500Mi
 - apiVersion: sources.knative.dev/v1
   kind: PingSource
   metadata:
@@ -54,6 +57,9 @@ objects:
             env:
             - name: APP_FILE
               value: producer.py
+            resources:
+              limits:
+                memory: 500Mi
 - apiVersion: serving.knative.dev/v1
   kind: Service
   metadata:
@@ -75,6 +81,33 @@ objects:
             env:
             - name: APP_FILE
               value: producer.py
+            resources:
+              limits:
+                memory: 500Mi
+- apiVersion: serving.knative.dev/v1
+  kind: Service
+  metadata:
+    name: loader-quarkus
+    namespace: ${APP_NAMESPACE}
+  spec:
+    template:
+      metadata:
+        labels:
+          module: loader-quarkus
+          app: knative-quickstarts-demo
+        annotations:
+          autoscaling.knative.dev/min-scale: "1"
+      spec:
+        containers:
+          - image: image-registry.openshift-image-registry.svc:5000/${APP_NAMESPACE}/loader-quarkus:latest
+            name: knative-quickstarts-demo-app
+            imagePullPolicy: Always
+            env:
+            - name: TEST
+              value: TODO
+            resources:
+              limits:
+                memory: 500Mi
 parameters:
 - description: App namespace
   from: '[A-Z0-9]{8}'
