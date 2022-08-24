@@ -19,6 +19,14 @@ objects:
   # spec:
   #   lookupPolicy:
   #     local: true
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: loader-quarkus
+    namespace: ${IMAGE_NAMESPACE}
+  # spec:
+  #   lookupPolicy:
+  #     local: true
 - apiVersion: build.openshift.io/v1
   kind: BuildConfig
   metadata:
@@ -65,6 +73,31 @@ objects:
     strategy:
       type: Docker
       dockerStrategy: {}
+    triggers:
+    - type: ConfigChange
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    name: loader-quarkus
+    namespace: ${IMAGE_NAMESPACE}
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: loader-quarkus:latest
+        namespace: ${IMAGE_NAMESPACE}
+    postCommit: {}
+    source:
+      git:
+        uri: https://github.com/dmartinol/knative-quickstarts.git
+      contextDir: src/loader
+      type: Git
+    strategy:
+      type: Source
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: openjdk-11:latest
     triggers:
     - type: ConfigChange
 parameters:
