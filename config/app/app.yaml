@@ -21,7 +21,7 @@ objects:
             name: user-container
             resources:
               limits:
-                memory: 500Mi
+                memory: 200Mi
 - apiVersion: sources.knative.dev/v1
   kind: PingSource
   metadata:
@@ -59,7 +59,7 @@ objects:
               value: producer.py
             resources:
               limits:
-                memory: 500Mi
+                memory: 200Mi
 - apiVersion: serving.knative.dev/v1
   kind: Service
   metadata:
@@ -83,7 +83,7 @@ objects:
               value: producer.py
             resources:
               limits:
-                memory: 500Mi
+                memory: 200Mi
 - apiVersion: serving.knative.dev/v1
   kind: Service
   metadata:
@@ -106,7 +106,7 @@ objects:
             - name: DBHOST
               value: postgresql
             - name: DBPORT
-              value: 5432
+              value: '5432'
             - name: DBNAME
               value: demodb
             - name: DBUSER
@@ -115,7 +115,7 @@ objects:
               value: demo123
             resources:
               limits:
-                memory: 500Mi
+                memory: 200Mi
 parameters:
 - description: App namespace
   from: '[A-Z0-9]{8}'
