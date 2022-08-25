@@ -65,25 +65,38 @@ graph TD
    loader -.type: com.redhat.knative.demo.Loaded.->event-store
 ```
 ## Installing the application
+We'll install the application on the [OpnsShift Sandbox](https://developers.redhat.com/developer-sandbox), that already includes an
+instance of the `Red Hat OpenShift Serverless` operator.
 
 ```bash
-export APP_NAMESPACE=dmartino-dev
-export IMAGE_NAMESPACE=dmartino-dev
+export APP_NAMESPACE=<YOUR_NS>
+export IMAGE_NAMESPACE=<YOUR_NS>
+export DB_NAMESPACE=<YOUR_NS>
 oc project ${APP_NAMESPACE}
+oc new-app --name=postgresql --template=postgresql-ephemeral \
+   -e POSTGRESQL_USER=demo -e POSTGRESQL_PASSWORD=demo123 -e POSTGRESQL_DATABASE=demodb\
+   -e NAMESPACE=${DB_NAMESPACE}
 oc process -p=APP_NAMESPACE=${APP_NAMESPACE} -f config/infra | oc apply -f -
 oc process -p=IMAGE_NAMESPACE=${IMAGE_NAMESPACE} -f config/build | oc apply -f -
 oc process -p=APP_NAMESPACE=${APP_NAMESPACE} -f config/app | oc apply -f -
 ```
 
+Commands to monitor the applications or the CloudEvents:
 ```bash
 oc logs -f -l app=knative-quickstarts-demo -c knative-quickstarts-demo-app
 oc logs -f -l module=event-display -c user-container
 ```
 
+Commands to check the DB status:
 ```bash
-oc process -p=APP_NAMESPACE=${APP_NAMESPACE} -f config/infra | oc delete -f -
-oc process -p=IMAGE_NAMESPACE=${IMAGE_NAMESPACE} -f config/build | oc delete -f -
-oc process -p=APP_NAMESPACE=${APP_NAMESPACE} -f config/app | oc delete -f -
+PSQL_POD=$(oc get pod -l name=postgresql -oname) && oc exec ${PSQL_POD} -- psql -Udemo -h localhost demodb -c "/dt" 
+PSQL_POD=$(oc get pod -l name=postgresql -oname) && oc exec ${PSQL_POD} -- psql -Udemo -h localhost demodb -c "select * from loadedrecord" 
+```
+
+Sample commands to update the configuration of the Knative services (require `kn` Knative CLI):
+```bash
+kn service update producer-python --scale-min=0
+kn service update producer-python --traffic @latest=100
 ```
 
 ## Uninstalling the application
@@ -91,8 +104,7 @@ oc process -p=APP_NAMESPACE=${APP_NAMESPACE} -f config/app | oc delete -f -
 oc process -p=APP_NAMESPACE=${APP_NAMESPACE} -f config/infra | oc delete -f -
 oc process -p=IMAGE_NAMESPACE=${IMAGE_NAMESPACE} -f config/build | oc delete -f -
 oc process -p=APP_NAMESPACE=${APP_NAMESPACE} -f config/app | oc delete -f -
-oc delete namespace knative-quickstarts
-```
 
-kn service update producer-python --scale-min=2
-kn service update producer-python --traffic @latest=100
+oc delete dc/postgresql 
+oc delete svc/postgresql 
+```
