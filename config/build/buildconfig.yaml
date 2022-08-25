@@ -8,25 +8,16 @@ objects:
   metadata:
     name: producer-python
     namespace: ${IMAGE_NAMESPACE}
-  # spec:
-  #   lookupPolicy:
-  #     local: true
 - apiVersion: v1
   kind: ImageStream
   metadata:
     name: dispatcher-go
     namespace: ${IMAGE_NAMESPACE}
-  # spec:
-  #   lookupPolicy:
-  #     local: true
 - apiVersion: v1
   kind: ImageStream
   metadata:
     name: loader-quarkus
     namespace: ${IMAGE_NAMESPACE}
-  # spec:
-  #   lookupPolicy:
-  #     local: true
 - apiVersion: build.openshift.io/v1
   kind: BuildConfig
   metadata:
@@ -96,8 +87,8 @@ objects:
       type: Source
       sourceStrategy:
         from:
-          kind: ImageStreamTag
-          name: openjdk-11:latest
+          kind: DockerImage
+          name: ubi8/openjdk-11:latest
     triggers:
     - type: ConfigChange
 parameters:
