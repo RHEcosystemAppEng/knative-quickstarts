@@ -103,8 +103,16 @@ objects:
             name: knative-quickstarts-demo-app
             imagePullPolicy: Always
             env:
-            - name: TEST
-              value: TODO
+            - name: DBHOST
+              value: postgresql
+            - name: DBPORT
+              value: 5432
+            - name: DBNAME
+              value: demodb
+            - name: DBUSER
+              value: demo
+            - name: DBPASS
+              value: demo123
             resources:
               limits:
                 memory: 500Mi
