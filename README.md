@@ -65,7 +65,7 @@ graph TD
    loader -.type: com.redhat.knative.demo.Loaded.->event-store
 ```
 ## Installing the application
-We'll install the application on the [OpnsShift Sandbox](https://developers.redhat.com/developer-sandbox), that already includes an
+We'll install the application on the [OpenShift Sandbox](https://developers.redhat.com/developer-sandbox), that already includes an
 instance of the `Red Hat OpenShift Serverless` operator.
 
 ```bash
