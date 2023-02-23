@@ -6,12 +6,12 @@ objects:
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: producer-python
+    name: producer-quarkus
     namespace: ${IMAGE_NAMESPACE}
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: dispatcher-go
+    name: dispatcher-quarkus
     namespace: ${IMAGE_NAMESPACE}
 - apiVersion: v1
   kind: ImageStream
@@ -21,51 +21,53 @@ objects:
 - apiVersion: build.openshift.io/v1
   kind: BuildConfig
   metadata:
-    name: producer-python
+    name: producer-quarkus
     namespace: ${IMAGE_NAMESPACE}
   spec:
     output:
       to:
         kind: ImageStreamTag
-        name: producer-python:latest
+        name: producer-quarkus:latest
         namespace: ${IMAGE_NAMESPACE}
     postCommit: {}
     source:
       git:
-        uri: https://github.com/dmartinol/knative-quickstarts.git
+        uri: https://github.com/judeniroshan/knative-quickstarts.git
       contextDir: src/producer
       type: Git
     strategy:
+      type: Source
       sourceStrategy:
         from:
-          kind: ImageStreamTag
-          name: python:3.9-ubi8
-          namespace: openshift
-      type: Source
+          kind: DockerImage
+          name: ubi8/openjdk-11:latest
     triggers:
-    - type: ConfigChange
+      - type: ConfigChange
 - apiVersion: build.openshift.io/v1
   kind: BuildConfig
   metadata:
-    name: dispatcher-go
+    name: dispatcher-quarkus
     namespace: ${IMAGE_NAMESPACE}
   spec:
     output:
       to:
         kind: ImageStreamTag
-        name: dispatcher-go:latest
+        name: dispatcher-quarkus:latest
         namespace: ${IMAGE_NAMESPACE}
     postCommit: {}
     source:
       git:
-        uri: https://github.com/dmartinol/knative-quickstarts.git
+        uri: https://github.com/judeniroshan/knative-quickstarts.git
       contextDir: src/dispatcher
       type: Git
     strategy:
-      type: Docker
-      dockerStrategy: {}
+      type: Source
+      sourceStrategy:
+        from:
+          kind: DockerImage
+          name: ubi8/openjdk-11:latest
     triggers:
-    - type: ConfigChange
+      - type: ConfigChange
 - apiVersion: build.openshift.io/v1
   kind: BuildConfig
   metadata:
@@ -80,7 +82,7 @@ objects:
     postCommit: {}
     source:
       git:
-        uri: https://github.com/dmartinol/knative-quickstarts.git
+        uri: https://github.com/judeniroshan/knative-quickstarts.git
       contextDir: src/loader
       type: Git
     strategy:
