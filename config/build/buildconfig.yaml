@@ -32,7 +32,8 @@ objects:
     postCommit: {}
     source:
       git:
-        uri: https://github.com/JudeNiroshan/knative-quickstarts.git
+        uri: https://github.com/dmartinol/knative-quickstarts.git
+        ref: quarkus-eventing-demo
       contextDir: src/producer
       type: Git
     strategy:
@@ -57,7 +58,8 @@ objects:
     postCommit: {}
     source:
       git:
-        uri: https://github.com/JudeNiroshan/knative-quickstarts.git
+        uri: https://github.com/dmartinol/knative-quickstarts.git
+        ref: quarkus-eventing-demo
       contextDir: src/dispatcher
       type: Git
     strategy:
@@ -82,7 +84,8 @@ objects:
     postCommit: {}
     source:
       git:
-        uri: https://github.com/JudeNiroshan/knative-quickstarts.git
+        uri: https://github.com/dmartinol/knative-quickstarts.git
+        ref: quarkus-eventing-demo
       contextDir: src/loader
       type: Git
     strategy:
