@@ -38,7 +38,7 @@ public class ProducerFunction {
         CloudEvent cloudEvent = CloudEventBuilder.v1()
                 .withDataContentType(MediaType.APPLICATION_JSON)
                 .withId(UUID.randomUUID().toString())
-                .withType("com.redhat.knative.demo.Produced")
+                .withType("com.redhat.knative.demo.producer.Produced")
                 .withSource(URI.create(serviceName))
                 .withData(jsonObject.toString().getBytes())
                 .build();

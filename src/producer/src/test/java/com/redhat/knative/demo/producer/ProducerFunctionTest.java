@@ -57,7 +57,7 @@ class ProducerFunctionTest {
         ValidatableResponse ok = RestAssured.given().contentType("application/json")
                 .header("ce-specversion", "1.0")
                 .header("ce-id", UUID.randomUUID().toString())
-                .header("ce-type", "com.redhat.knative.demo.Produced")
+                .header("ce-type", "com.redhat.knative.demo.producer.Trigger")
                 .header("ce-source", "test-service")
                 .post("/")
                 .then().statusCode(200);
@@ -71,7 +71,7 @@ class ProducerFunctionTest {
         assertThat(allServeEvents, hasSize(1));
 
         ServeEvent event = allServeEvents.get(0);
-        assertThat(event.getRequest().header("ce-type").values().get(0), containsString("com.redhat.knative.demo.Produced"));
+        assertThat(event.getRequest().header("ce-type").values().get(0), containsString("com.redhat.knative.demo.producer.Produced"));
         assertTrue(event.getRequest().getBodyAsString().contains("A new message from "));
     }
 }
