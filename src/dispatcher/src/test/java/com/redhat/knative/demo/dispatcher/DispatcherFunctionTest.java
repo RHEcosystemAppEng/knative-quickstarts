@@ -31,8 +31,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @WithOpenShiftTestServer
 @QuarkusTest
-class ControllerResourceTest {
-    private static final Logger log = Logger.getLogger(ControllerResourceTest.class);
+class DispatcherFunctionTest {
+    private static final Logger log = Logger.getLogger(DispatcherFunctionTest.class);
     private static WireMockServer sink;
 
     @OpenShiftTestServer
