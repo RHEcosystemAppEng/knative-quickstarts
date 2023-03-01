@@ -15,9 +15,9 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 
-public class ControllerResource {
+public class ProducerFunction {
 
-    Logger logger = Logger.getLogger(ControllerResource.class);
+    Logger logger = Logger.getLogger(ProducerFunction.class);
 
     @ConfigProperty(name = "app.service.name", defaultValue = "app-service")
     String serviceName;
