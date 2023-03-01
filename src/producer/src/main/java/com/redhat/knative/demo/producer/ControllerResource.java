@@ -1,4 +1,4 @@
-package org.acme;
+package com.redhat.knative.demo.producer;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;

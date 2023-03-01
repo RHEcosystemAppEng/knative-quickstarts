@@ -1,4 +1,4 @@
-package org.acme;
+package com.redhat.knative.demo.producer;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
