@@ -1,4 +1,4 @@
-package org.acme;
+package com.redhat.knative.demo.dispatcher;
 
 import io.quarkus.funqy.knative.events.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
@@ -9,9 +9,6 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.net.URI;
 import java.time.LocalDateTime;

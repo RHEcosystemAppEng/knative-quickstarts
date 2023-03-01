@@ -1,12 +1,10 @@
-package org.acme;
+package com.redhat.knative.demo.dispatcher;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import com.google.common.collect.Lists;
 import io.fabric8.openshift.client.server.mock.OpenShiftServer;
-import io.quarkus.funqy.knative.events.CloudEvent;
-import io.quarkus.funqy.knative.events.CloudEventBuilder;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.kubernetes.client.OpenShiftTestServer;
 import io.quarkus.test.kubernetes.client.WithOpenShiftTestServer;
@@ -18,8 +16,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.net.URI;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,7 +59,7 @@ class ControllerResourceTest {
         ValidatableResponse ok = RestAssured.given().contentType("application/json")
                 .header("ce-specversion", "1.0")
                 .header("ce-id", UUID.randomUUID().toString())
-                .header("ce-type", "com.redhat.knative.demo.Produced")
+                .header("ce-type", "com.redhat.knative.demo.dispatcher.Produced")
                 .header("ce-source", "test-service")
                 .body(jsonObject)
                 .post("/")

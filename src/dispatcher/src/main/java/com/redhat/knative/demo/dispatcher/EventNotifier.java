@@ -1,4 +1,4 @@
-package org.acme;
+package com.redhat.knative.demo.dispatcher;
 
 import io.cloudevents.CloudEvent;
 import io.cloudevents.jackson.JsonFormat;
