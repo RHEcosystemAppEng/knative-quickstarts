@@ -31,7 +31,7 @@ objects:
       ref:
         apiVersion: serving.knative.dev/v1
         kind: Service
-        name: dispatcher-go
+        name: dispatcher-quarkus
 - apiVersion: sources.knative.dev/v1
   kind: SinkBinding
   metadata:
@@ -41,7 +41,7 @@ objects:
     subject:
       apiVersion: serving.knative.dev/v1
       kind: Service
-      name: producer-python
+      name: producer-quarkus
     sink:
       ref:
         apiVersion: eventing.knative.dev/v1
@@ -57,7 +57,7 @@ objects:
     subject:
       apiVersion: serving.knative.dev/v1
       kind: Service
-      name: dispatcher-go
+      name: dispatcher-quarkus
     sink:
       ref:
         apiVersion: messaging.knative.dev/v1
