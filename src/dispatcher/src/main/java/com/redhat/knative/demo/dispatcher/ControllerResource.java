@@ -1,8 +1,8 @@
 package com.redhat.knative.demo.dispatcher;
 
-import io.quarkus.funqy.knative.events.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.quarkus.funqy.Funq;
+import io.quarkus.funqy.knative.events.CloudEvent;
 import io.vertx.core.json.JsonObject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
