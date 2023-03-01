@@ -28,7 +28,7 @@ public class DispatcherFunction {
     EventNotifier eventNotifier;
 
     @Funq
-    public String dispatchEvent(CloudEvent<JsonObject> cloudEvent) {
+    public String dispatchEvent(CloudEvent<ProducedEvent> cloudEvent) {
         logger.info(revisionName + " - Event received with type " + cloudEvent.type() + " and data: " + cloudEvent.data());
 
         JsonObject jsonObject = new JsonObject()
@@ -38,7 +38,7 @@ public class DispatcherFunction {
         io.cloudevents.CloudEvent newCloudEvent = CloudEventBuilder.v1()
                 .withDataContentType(MediaType.APPLICATION_JSON)
                 .withId(UUID.randomUUID().toString())
-                .withType("com.redhat.knative.demo.Dispatched")
+                .withType("com.redhat.knative.demo.dispatcher.Produced")
                 .withSource(URI.create(serviceName))
                 .withData(jsonObject.toString().getBytes())
                 .build();
