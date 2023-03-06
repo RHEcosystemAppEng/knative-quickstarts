@@ -3,7 +3,6 @@ package com.redhat.knative.demo.producer;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.quarkus.funqy.Funq;
-import io.vertx.core.json.JsonObject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
@@ -32,15 +31,14 @@ public class ProducerFunction {
     public String produceEvent() {
         logger.info("Quarkus Producer, serviceName: " + serviceName + ", revision: " + revisionName);
 
-        JsonObject jsonObject = new JsonObject()
-                .put("message", "A new message from " + revisionName + " at " + LocalDateTime.now());
-
+        ProducedEvent producedEvent = new
+                ProducedEvent("A new message from " + revisionName + " at " + LocalDateTime.now());
         CloudEvent cloudEvent = CloudEventBuilder.v1()
                 .withDataContentType(MediaType.APPLICATION_JSON)
                 .withId(UUID.randomUUID().toString())
                 .withType("com.redhat.knative.demo.producer.Produced")
                 .withSource(URI.create(serviceName))
-                .withData(jsonObject.toString().getBytes())
+                .withData(producedEvent.toString().getBytes())
                 .build();
 
         return eventNotifier.emit(cloudEvent);
