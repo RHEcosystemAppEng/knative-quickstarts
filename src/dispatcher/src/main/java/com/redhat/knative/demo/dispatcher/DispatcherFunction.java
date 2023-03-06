@@ -3,7 +3,6 @@ package com.redhat.knative.demo.dispatcher;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.quarkus.funqy.Funq;
 import io.quarkus.funqy.knative.events.CloudEvent;
-import io.vertx.core.json.JsonObject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
@@ -31,16 +30,15 @@ public class DispatcherFunction {
     public String dispatchEvent(CloudEvent<ProducedEvent> cloudEvent) {
         logger.info(revisionName + " - Event received with type " + cloudEvent.type() + " and data: " + cloudEvent.data());
 
-        JsonObject jsonObject = new JsonObject()
-                .put("message", "Dispatched from " + revisionName + " at " + LocalDateTime.now());
-
+        DispatchedEvent dispatchedEvent = new
+                DispatchedEvent("Dispatched from " + revisionName + " at " + LocalDateTime.now());
 
         io.cloudevents.CloudEvent newCloudEvent = CloudEventBuilder.v1()
                 .withDataContentType(MediaType.APPLICATION_JSON)
                 .withId(UUID.randomUUID().toString())
                 .withType("com.redhat.knative.demo.dispatcher.Dispatched")
                 .withSource(URI.create(serviceName))
-                .withData(jsonObject.toString().getBytes())
+                .withData(dispatchedEvent.toString().getBytes())
                 .build();
 
         return eventNotifier.emit(newCloudEvent);
