@@ -1,6 +1,8 @@
 package com.redhat.knative.demo.dispatcher;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudevents.core.builder.CloudEventBuilder;
+import io.cloudevents.core.data.PojoCloudEventData;
 import io.quarkus.funqy.Funq;
 import io.quarkus.funqy.knative.events.CloudEvent;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -26,6 +28,9 @@ public class DispatcherFunction {
     @RestClient
     EventNotifier eventNotifier;
 
+    @Inject
+    ObjectMapper mapper;
+
     @Funq
     public String dispatchEvent(CloudEvent<ProducedEvent> cloudEvent) {
         logger.info(revisionName + " - Event received with type " + cloudEvent.type() + " and data: " + cloudEvent.data());
@@ -38,7 +43,7 @@ public class DispatcherFunction {
                 .withId(UUID.randomUUID().toString())
                 .withType("com.redhat.knative.demo.dispatcher.Dispatched")
                 .withSource(URI.create(serviceName))
-                .withData(dispatchedEvent.toString().getBytes())
+                .withData(PojoCloudEventData.wrap(dispatchedEvent, mapper::writeValueAsBytes))
                 .build();
 
         return eventNotifier.emit(newCloudEvent);

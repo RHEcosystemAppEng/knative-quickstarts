@@ -1,7 +1,9 @@
 package com.redhat.knative.demo.producer;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
+import io.cloudevents.core.data.PojoCloudEventData;
 import io.quarkus.funqy.Funq;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -27,6 +29,9 @@ public class ProducerFunction {
     @RestClient
     EventNotifier eventNotifier;
 
+    @Inject
+    ObjectMapper mapper;
+
     @Funq
     public String produceEvent() {
         logger.info("Quarkus Producer, serviceName: " + serviceName + ", revision: " + revisionName);
@@ -38,7 +43,7 @@ public class ProducerFunction {
                 .withId(UUID.randomUUID().toString())
                 .withType("com.redhat.knative.demo.producer.Produced")
                 .withSource(URI.create(serviceName))
-                .withData(producedEvent.toString().getBytes())
+                .withData(PojoCloudEventData.wrap(producedEvent, mapper::writeValueAsBytes))
                 .build();
 
         return eventNotifier.emit(cloudEvent);
