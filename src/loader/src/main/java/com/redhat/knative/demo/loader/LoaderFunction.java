@@ -16,7 +16,7 @@ public class LoaderFunction {
     @ConfigProperty(name = "k-revision")
     private String revisionName;
 
-    @Funq("com.redhat.knative.demo.Dispatched")
+    @Funq("com.redhat.knative.demo.dispatcher.Produced")
     @Transactional
     public String load(CloudEvent<DispatchedEvent> event) {
         DispatchedEvent dispatchedEvent = event.data();
