@@ -23,14 +23,14 @@ public class LoaderFunctionTest {
         RestAssured.given().contentType("application/json")
                 .header("ce-specversion", "1.0")
                 .header("ce-id", UUID.randomUUID().toString())
-                .header("ce-type", "com.redhat.knative.demo.Dispatched")
+                .header("ce-type", "com.redhat.knative.demo.dispatcher.Dispatched")
                 .header("ce-source", "test")
                 .body(event)
                 .post("/")
                 .then().statusCode(200)
                 .header("ce-id", notNullValue())
-                .header("ce-type", "com.redhat.knative.demo.Dispatched.output")
-                .header("ce-source", "com.redhat.knative.demo.Dispatched")
+                .header("ce-type", "com.redhat.knative.demo.dispatcher.Dispatched.output")
+                .header("ce-source", "com.redhat.knative.demo.dispatcher.Dispatched")
                 .body(Matchers.equalTo("\"Dispatched\""));
     }
 
@@ -40,7 +40,7 @@ public class LoaderFunctionTest {
         RestAssured.given().contentType("application/json")
                 .header("ce-specversion", "1.0")
                 .header("ce-id", UUID.randomUUID().toString())
-                .header("ce-type", "com.redhat.knative.demo.Dispatched")
+                .header("ce-type", "com.redhat.knative.demo.dispatcher.Dispatched")
                 .header("ce-source", "test")
                 .body(event)
                 .post("/")

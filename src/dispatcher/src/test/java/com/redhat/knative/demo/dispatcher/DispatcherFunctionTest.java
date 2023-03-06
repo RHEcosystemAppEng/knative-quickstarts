@@ -58,7 +58,7 @@ class DispatcherFunctionTest {
         ValidatableResponse ok = RestAssured.given().contentType("application/json")
                 .header("ce-specversion", "1.0")
                 .header("ce-id", UUID.randomUUID().toString())
-                .header("ce-type", "com.redhat.knative.demo.dispatcher.Dispatched")
+                .header("ce-type", "com.redhat.knative.demo.producer.Produced")
                 .header("ce-source", "test-service")
                 .body(producedEvent)
                 .post("/")
@@ -73,7 +73,7 @@ class DispatcherFunctionTest {
         assertThat(allServeEvents, hasSize(1));
 
         ServeEvent event = allServeEvents.get(0);
-        assertThat(event.getRequest().header("ce-type").values().get(0), containsString("com.redhat.knative.demo.dispatcher.Produced"));
+        assertThat(event.getRequest().header("ce-type").values().get(0), containsString("com.redhat.knative.demo.dispatcher.Dispatched"));
         assertTrue(event.getRequest().getBodyAsString().contains("Dispatched from "));
     }
 }

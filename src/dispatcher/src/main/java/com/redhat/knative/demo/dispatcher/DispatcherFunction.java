@@ -38,7 +38,7 @@ public class DispatcherFunction {
         io.cloudevents.CloudEvent newCloudEvent = CloudEventBuilder.v1()
                 .withDataContentType(MediaType.APPLICATION_JSON)
                 .withId(UUID.randomUUID().toString())
-                .withType("com.redhat.knative.demo.dispatcher.Produced")
+                .withType("com.redhat.knative.demo.dispatcher.Dispatched")
                 .withSource(URI.create(serviceName))
                 .withData(jsonObject.toString().getBytes())
                 .build();
