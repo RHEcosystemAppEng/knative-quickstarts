@@ -33,7 +33,7 @@ public class ProducerFunction {
     ObjectMapper mapper;
 
     @Funq
-    public String produceEvent() {
+    public void produceEvent() {
         logger.info("Quarkus Producer, serviceName: " + serviceName + ", revision: " + revisionName);
 
         ProducedEvent producedEvent = new
@@ -46,6 +46,6 @@ public class ProducerFunction {
                 .withData(PojoCloudEventData.wrap(producedEvent, mapper::writeValueAsBytes))
                 .build();
 
-        return eventNotifier.emit(cloudEvent);
+        eventNotifier.emit(cloudEvent);
     }
 }

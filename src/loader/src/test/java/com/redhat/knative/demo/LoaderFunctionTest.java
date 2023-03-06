@@ -1,18 +1,15 @@
 package com.redhat.knative.demo;
 
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
-
-import java.util.UUID;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.redhat.knative.demo.loader.DispatchedEvent;
+import io.quarkus.test.junit.QuarkusTest;
+import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.redhat.knative.demo.loader.DispatchedEvent;
+import java.util.UUID;
 
-import io.quarkus.test.junit.QuarkusTest;
-import io.restassured.RestAssured;
+import static org.hamcrest.Matchers.nullValue;
 
 @QuarkusTest
 public class LoaderFunctionTest {
@@ -27,11 +24,7 @@ public class LoaderFunctionTest {
                 .header("ce-source", "test")
                 .body(event)
                 .post("/")
-                .then().statusCode(200)
-                .header("ce-id", notNullValue())
-                .header("ce-type", "com.redhat.knative.demo.dispatcher.Dispatched.output")
-                .header("ce-source", "com.redhat.knative.demo.dispatcher.Dispatched")
-                .body(Matchers.equalTo("\"Dispatched\""));
+                .then().statusCode(204);
     }
 
     @Test

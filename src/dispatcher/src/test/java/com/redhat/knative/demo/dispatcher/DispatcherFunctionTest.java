@@ -4,13 +4,9 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import com.google.common.collect.Lists;
-import io.fabric8.openshift.client.server.mock.OpenShiftServer;
 import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.kubernetes.client.OpenShiftTestServer;
-import io.quarkus.test.kubernetes.client.WithOpenShiftTestServer;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
-import io.vertx.core.json.JsonObject;
 import org.jboss.logging.Logger;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -29,14 +25,10 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@WithOpenShiftTestServer
 @QuarkusTest
 class DispatcherFunctionTest {
     private static final Logger log = Logger.getLogger(DispatcherFunctionTest.class);
     private static WireMockServer sink;
-
-    @OpenShiftTestServer
-    private OpenShiftServer mockOpenShiftServer;
 
     @BeforeAll
     public static void startSink() {
@@ -62,7 +54,7 @@ class DispatcherFunctionTest {
                 .header("ce-source", "test-service")
                 .body(producedEvent)
                 .post("/")
-                .then().statusCode(200);
+                .then().statusCode(204);
 
         log.info(ok.extract().asString());
         sink.verify(1, postRequestedFor(urlEqualTo("/"))

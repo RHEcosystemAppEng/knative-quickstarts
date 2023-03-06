@@ -32,7 +32,7 @@ public class DispatcherFunction {
     ObjectMapper mapper;
 
     @Funq
-    public String dispatchEvent(CloudEvent<ProducedEvent> cloudEvent) {
+    public void dispatchEvent(CloudEvent<ProducedEvent> cloudEvent) {
         logger.info(revisionName + " - Event received with type " + cloudEvent.type() + " and data: " + cloudEvent.data());
 
         DispatchedEvent dispatchedEvent = new
@@ -46,6 +46,6 @@ public class DispatcherFunction {
                 .withData(PojoCloudEventData.wrap(dispatchedEvent, mapper::writeValueAsBytes))
                 .build();
 
-        return eventNotifier.emit(newCloudEvent);
+        eventNotifier.emit(newCloudEvent);
     }
 }

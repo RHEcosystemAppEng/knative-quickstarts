@@ -1,14 +1,12 @@
 package com.redhat.knative.demo.loader;
 
-import javax.transaction.Transactional;
-
+import com.redhat.knative.demo.LoadedRecord;
+import io.quarkus.funqy.Funq;
+import io.quarkus.funqy.knative.events.CloudEvent;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 
-import com.redhat.knative.demo.LoadedRecord;
-
-import io.quarkus.funqy.Funq;
-import io.quarkus.funqy.knative.events.CloudEvent;
+import javax.transaction.Transactional;
 
 public class LoaderFunction {
     private static final Logger log = Logger.getLogger(LoaderFunction.class);
@@ -18,7 +16,7 @@ public class LoaderFunction {
 
     @Funq("com.redhat.knative.demo.dispatcher.Dispatched")
     @Transactional
-    public String load(CloudEvent<DispatchedEvent> event) {
+    public void load(CloudEvent<DispatchedEvent> event) {
         DispatchedEvent dispatchedEvent = event.data();
         log.infof("[%s] - Event received with type %s and data: %s\n", revisionName, event.type(),
                 dispatchedEvent);
@@ -26,6 +24,5 @@ public class LoaderFunction {
         LoadedRecord record = new LoadedRecord(event.type(),dispatchedEvent.getMsg());
         record.persist();
         log.infof("[%s] - Record persisted as: %s\n", revisionName, record);
-        return "Dispatched";
     }
 }
