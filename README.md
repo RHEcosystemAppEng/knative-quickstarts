@@ -5,15 +5,15 @@ Generate, display and store recurring events (polyglot)
 Deployment architecture of the demo application:
 ```mermaid
 graph TD
-   poller(<b>sources.eventing.knative.dev.CronJobSource</b><br/>poller)
-   producer(<b>serving.knative.dev.Service</b><br/>&ltPython&gt producer)
+   poller(<b>sources.eventing.knative.dev.PingSource</b><br/>poller)
+   producer(<b>serving.knative.dev.Service</b><br/>&ltQuarkus&gt producer)
    producer-binding(<b>SinkBinding</b><br/>producer-binding)
    broker[<b>eventing.knative.dev.Broker</b><br/>default]
    poller --sink.ref--> producer
    producer-binding --subject<br/>env.K_SINK--> producer
    producer-binding --sink.ref--> broker
 
-   dispatcher(<b>serving.knative.dev.Service</b><br/>&ltGo&gt dispatcher)
+   dispatcher(<b>serving.knative.dev.Service</b><br/>&ltQuarkus&gt dispatcher)
    dispatcher-binding(<b>SinkBinding</b><br/>dispatcher-binding)
    dispatcher-trigger(<b>Trigger</b><br/>dispatcher-trigger)
    dispatcher-binding --subject<br/>env.K_SINK--> dispatcher
@@ -43,7 +43,7 @@ graph TD
 Configured event flow:
 ```mermaid
 graph TD
-   poller(<b>sources.eventing.knative.dev.CronJobSource</b><br/>poller)
+   poller(<b>sources.eventing.knative.dev.PingSource</b><br/>poller)
    producer(<b>serving.knative.dev.Service</b><br/>producer)
    broker[<b>eventing.knative.dev.Broker</b><br/>default]
    poller -.type: dev.knative.sources.ping.-> producer

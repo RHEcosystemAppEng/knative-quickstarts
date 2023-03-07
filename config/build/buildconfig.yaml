@@ -32,7 +32,7 @@ objects:
     postCommit: {}
     source:
       git:
-        uri: https://github.com/dmartinol/knative-quickstarts.git
+        uri: https://github.com/RHEcosystemAppEng/knative-quickstarts.git
         ref: quarkus-eventing-demo
       contextDir: src/producer
       type: Git
@@ -58,7 +58,7 @@ objects:
     postCommit: {}
     source:
       git:
-        uri: https://github.com/dmartinol/knative-quickstarts.git
+        uri: https://github.com/RHEcosystemAppEng/knative-quickstarts.git
         ref: quarkus-eventing-demo
       contextDir: src/dispatcher
       type: Git
@@ -84,7 +84,7 @@ objects:
     postCommit: {}
     source:
       git:
-        uri: https://github.com/dmartinol/knative-quickstarts.git
+        uri: https://github.com/RHEcosystemAppEng/knative-quickstarts.git
         ref: quarkus-eventing-demo
       contextDir: src/loader
       type: Git
