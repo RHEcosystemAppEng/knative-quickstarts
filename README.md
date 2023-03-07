@@ -37,7 +37,7 @@ graph TD
    loader-subscription --subscriber--> loader
 
    event-display(<b>serving.knative.dev.Service</b><br/>&ltImage&gt<br/>&ltmin-scale=1&gt<br/>event-display)
-   style event-display fill:#dba9b2,color:#000;
+   style event-display fill:#6a84bd,color:#000;
    event-display-trigger(<b>Trigger</b><br/>event-display-trigger)
    style event-display-trigger fill:#efc760,color:#000;
    event-display-subscription(<b>messaging.knative.dev.Subscription</b><br/>event-display-subscription)
